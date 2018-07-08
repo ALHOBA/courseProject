@@ -1,0 +1,33 @@
+.menu-bar {
+    -fx-background-color: 
+    	#aeb5ba,
+    	linear-gradient(to bottom, #5500ff 0%, #5500ff 100%);
+    -fx-background-insets: 0, 0 0 1 0;
+ 
+}
+ 
+.menu , .label , .menu-bar {
+-fx-font-family:IRANSans;
+}
+#p_image {
+-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+ -fx-background-size: 1200 900;
+ -fx-border-radius: 10 10 0 0;
+ -fx-background-radius: 10 10 0 0;
+ -fx-border-color: #FC3D44;
+ 
+}
+.menu-bar   {
+   -fx-text-fill: #2d3e4c;
+}
+
+.split-pane > .split-pane-divider {
+	-fx-background-color: 
+		linear-gradient(to right, #0000ff 0%, #ff007f 100%);
+    -fx-padding: 0 3 0 3;
+}
+
+.scroll-pane {
+    -fx-background-insets: 0, 0;
+    -fx-padding: 0;
+}
