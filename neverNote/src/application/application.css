@@ -1,0 +1,23 @@
+.button{
+	-fx-border-color: orange;
+	-fx-border-width: 0 0 4 0;
+	-fx-border-style: solid ;
+	-fx-background-color: purple;
+	-fx-background-insets: 0;
+	-fx-snap-to-pixel: false;
+	-fx-text-fill:white;
+	-fx-font-family:sans-serif;
+ 
+}
+#signup{
+	-fx-background-color:darkblue;
+}
+
+.button:pressed{
+	-fx-border-color: orange;
+}
+.button:focused{
+	-fx-border-color: orange;
+	-fx-focus-traversable: false;
+	-fx-background-insets: 0;
+}
