@@ -52,6 +52,7 @@ public  class DataBase  extends XmlParser{
 	}
 	boolean passwordMatches(String password) {
 		Element elem = getElementById(username);
+		if(elem==null) return false;
 		return (elem.getTextContent().equals(password));
 	}
 	private String username;

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="950.0" snapToPixel="true" style="-fx-background-color:transparent;&#10;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.appController">
+  <children>
+    <GridPane gridLinesVisible="false" layoutX="0.0" layoutY="26.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefHeight="574.0" prefWidth="950.0" style="-fx-background-color:transparent;&#10; ">
+      <children>
+        <AnchorPane fx:id="right" minWidth="216.0" prefHeight="565.0" prefWidth="216.0" style="-fx-border-width:0 0 0 4;&#10; -fx-border-color:#3c3e58;&#10;-fx-background-color:#7275a7;" visible="true" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.rowSpan="4">
+          <children>
+            <ImageView fitHeight="133.0" fitWidth="133.0" layoutX="43.0" layoutY="7.0" opacity="0.86" pickOnBounds="true" preserveRatio="true" smooth="true" style="-fx-background-color:#7275a7;">
+              <image>
+                <Image url="@../../../../../Downloads/logo.png" />
+              </image>
+            </ImageView>
+          </children>
+        </AnchorPane>
+        <AnchorPane fx:id="center" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color:#00aaff;" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="4">
+          <children>
+            <Button id="btn_newNoteBook" layoutX="14.0" layoutY="4.0" mnemonicParsing="true" onAction="#newNoteBook" prefHeight="40.0" prefWidth="114.0" style="-fx-background-color:#56587e;" text="دفترچه جدید" textFill="WHITE" underline="false" wrapText="false">
+              <font>
+                <Font name="IRANSans Bold" size="15.0" fx:id="x1" />
+              </font>
+            </Button>
+          </children>
+        </AnchorPane>
+        <AnchorPane fx:id="left" minHeight="200.0" minWidth="200.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-width:0 4 0 0;&#10; -fx-border-color:#0096e1;&#10;&#10;-fx-background-color:transparent;&#10;&#10;-fx-background-color:transparent;&#10;" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4" />
+        <FlowPane alignment="TOP_CENTER" columnHalignment="RIGHT" focusTraversable="false" orientation="HORIZONTAL" prefHeight="200.0" prefWidth="200.0" style="&#10;-fx-background-color:transparent;" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="2">
+          <children>
+            <ImageView fx:id="userImage" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="false">
+              <image>
+                <Image url="@../../../../../Pictures/technology.jpg" />
+              </image>
+            </ImageView>
+            <Label alignment="CENTER_LEFT" cache="false" contentDisplay="BOTTOM" depthTest="DISABLE" font="$x1" graphicTextGap="4.0" labelFor="$userImage" mnemonicParsing="false" mouseTransparent="false" prefWidth="-1.0" style="&#10;-fx-background-color:transparent;" text="کاربر مهمان" textAlignment="RIGHT" textOverrun="ELLIPSIS" underline="false" wrapText="false">
+              <graphic>
+                <Button id="logOut" onMouseClicked="#logOut" mnemonicParsing="false" prefWidth="102.5" text="خروج">
+                  <font>
+                    <Font name="IRANSans Light" size="14.0" />
+                  </font>
+                  <stylesheets>
+                    <URL value="@app.css" />
+                  </stylesheets>
+                </Button>
+              </graphic>
+            </Label>
+          </children>
+        </FlowPane>
+      </children>
+      <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="23.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="54.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="23.0" prefWidth="100.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+    </GridPane>
+    <MenuBar layoutX="0.0" layoutY="3.0" prefWidth="954.0">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Close" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Edit">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Delete" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+          <items>
+            <MenuItem mnemonicParsing="false" text="About" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+  </children>
+  <stylesheets>
+    <URL value="@app.css" />
+  </stylesheets>
+</AnchorPane>

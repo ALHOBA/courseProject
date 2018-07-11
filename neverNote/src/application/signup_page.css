@@ -1,0 +1,24 @@
+#btn_register{ 
+	-fx-background-color: #00aaff; 
+	-fx-text-fill:white;
+}
+#browse{
+-fx-background-color:#f8f8f8;
+-fx-font-family:IRANSans;
+ 
+}
+.text-field{
+-fx-background-color:#6f6f6f;
+}
+#signup{
+	-fx-background-color:darkblue;
+}
+
+.button:pressed{
+	-fx-border-color: orange;
+}
+.button:focused , .button:hover{
+	-fx-border-color: orange;
+	-fx-focus-traversable: false;
+	-fx-background-color:palegoldenrod ;
+}

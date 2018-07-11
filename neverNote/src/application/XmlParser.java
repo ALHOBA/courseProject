@@ -49,16 +49,22 @@ public class XmlParser  {
 	DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder docBuilder ;
 	Document doc = null;
+	Element element = null;
 	try {
 		docBuilder = docFactory.newDocumentBuilder();
+		if(new File(getPath()).exists())
 		doc = docBuilder.parse(getPath());
+		else {
+			element = null;
+			return element;
+		}
 	} catch (SAXException | IOException | ParserConfigurationException e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
 	}
 	XPathFactory xpathFactory = XPathFactory.newInstance();
 	XPath xpath = xpathFactory.newXPath();
-	Element element = null;
+	 
 
 	try {
 		element = (Element) xpath.evaluate("//*[@id='" + token + "']", doc, XPathConstants.NODE);
@@ -66,6 +72,7 @@ public class XmlParser  {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
+	
 	return element;
 	}
 	private Element root;

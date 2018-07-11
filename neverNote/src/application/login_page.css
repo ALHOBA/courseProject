@@ -1,0 +1,18 @@
+#btn_signup{ 
+	-fx-background-color: #00aaff; 
+	-fx-text-fill:white;
+}
+.text-field{
+-fx-background-color:#6f6f6f;
+}
+#btn_user , #btn_guest{
+-fx-background-color:#b5ff2a;
+}
+.button:pressed{
+	-fx-border-color: orange;
+}
+.button:focused , .button:hover{
+	-fx-border-color: orange;
+	-fx-focus-traversable: false;
+	-fx-background-color:palegoldenrod ;
+}
