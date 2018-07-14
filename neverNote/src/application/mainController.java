@@ -7,21 +7,31 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
+import javax.naming.spi.DirectoryManager;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.FileSystem;
 import java.nio.file.Path;
 
 import javafx.animation.FadeTransition;
@@ -50,21 +60,78 @@ public class mainController  extends Main {
 		main_alert.setTextFill(Color.GREEN);
 			}
 	} 
+	class user{
+		private String name;
+		private String password;
+		private String image;
+		private String path;
+		public String getPath() {
+			return path;
+		}
+		public void setPath(String path) {
+			this.path = path;
+		}
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public String getPassword() {
+			return password;
+		}
+		public void setPassword(String password) {
+			this.password = password;
+		}
+		public user(String name, String password, String image , String path) {
+			super();
+			this.name = name;
+			this.password = password;
+			this.image = image;
+			this.path = path;
+		}
+		public String getImage() {
+			return image;
+		}
+		public void setImage(String image) {
+			this.image = image;
+		}
+		public void genXML(){
+			DataBase db = new DataBase(this.path);
+			Document doc =  db.generateDoc();
 			
+			db.createDatabase(doc);
+		}
+	}
+	private static String login_user;
+	
+	public static String getLogin_user() {
+		return login_user;
+	}
+
+ 
+
 	@FXML
 	private void  login(Event event) {
 		if((event instanceof KeyEvent && ((KeyEvent)event).getCode()==KeyCode.ENTER) || event instanceof ActionEvent){
 			String usr = log_user.getText().trim().toLowerCase();
 			String pass = log_pass.getText().trim();
-		 
 		DataBase db = new DataBase(usr , pass , "file.xml");
 		boolean userExists = db.userExists(usr);
 		boolean passWordMatches = db.passwordMatches(pass);
+		 
 		if(userExists && passWordMatches) {
 			userLoggedIn = true;
+			try {
+				profileImagePath = db.getAttributes(db.getElementById(usr).getElementsByTagName("image").item(0)).getNamedItem("src").getNodeValue();
+				}
+				catch(NullPointerException ex) {
+					ex.printStackTrace();
+				} 
 		}
 		if(userLoggedIn) {
 			changeScene("app.fxml");
+			this.login_user = usr;
 			main_alert.setTextFill(Color.GREEN);
 		}
 		else {
@@ -101,17 +168,30 @@ public class mainController  extends Main {
 		String usr = reg_username.getText().toLowerCase().trim();
 		DataBase db = new DataBase(usr , re_pass , "file.xml");
 		boolean userExists = db.userExists(usr);
-		boolean newUser = !userExists;
+		boolean duplicate = userExists;
 		boolean passWordMatches = re_pass.equals(ver_pass);
 
-		if(re_pass.equals(ver_pass) && !re_pass.isEmpty() && !usr.isEmpty()) {
-
-			if(newUser) {
+		if(re_pass.equals(ver_pass) && !re_pass.isEmpty() && !usr.isEmpty() && !duplicate) {
+			if(!duplicate) {
 				try {
-					db.createDatabase();
-				} catch (XPathExpressionException | ParserConfigurationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				Document doc;
+				doc = db.generateDoc();
+				// set root element
+				// create new elements
+				Element user = doc.createElement("user");
+				db.getRoot().appendChild(user);
+				user.setAttribute("id", db.getUserName() );
+				Element pass =  doc.createElement("password");
+				pass.setTextContent(re_pass);
+				db.getRoot().appendChild(user);
+				Element image = doc.createElement("image");
+				image.setAttribute("src",profileImagePath);
+				user.appendChild(pass);
+				user.appendChild(image);
+				db.createDatabase(doc);
+				}
+				catch(NullPointerException ex) {
+					ex.printStackTrace();
 				}
 			}
 			signup_alert.setText("خوش آمدید");
@@ -127,17 +207,17 @@ public class mainController  extends Main {
 				signup_alert.setText("نام کاربری وارد کنید");
 				signup_alert.setVisible(true);
 			}
-			else if(re_pass.isEmpty()) {
+			else if(re_pass.trim().isEmpty()) {
 				Anim.fadeIn(signup_alert , 400);
 				signup_alert.setText("لطفا پسورد را وارد کنید");
 				signup_alert.setVisible(true);
 			}
-			else if(ver_pass.isEmpty()) {
+			else if(ver_pass.trim().isEmpty()) {
 				Anim.fadeIn(signup_alert , 400);
 				signup_alert.setText("لطفا تکرار پسورد را وارد کنید");
 				signup_alert.setVisible(true);
 			}
-			else if(!newUser){
+			else if(duplicate){
 				signup_alert.setText("این نام کاربری وجود دارد");
 				Anim.fadeIn(signup_alert , 400);
 				signup_alert.setVisible(true);
@@ -208,62 +288,31 @@ public class mainController  extends Main {
 			Anim.fadeIn(node , 1200);
 		}
 	}
-	  private TreeItem<File> createNode(final File f) {
-		    return new TreeItem<File>(f) {
-		      private boolean isLeaf;
-		      private boolean isFirstTimeChildren = true;
-		      private boolean isFirstTimeLeaf = true;
-
-		      @Override
-		      public ObservableList<TreeItem<File>> getChildren() {
-		        if (isFirstTimeChildren) {
-		          isFirstTimeChildren = false;
-		          super.getChildren().setAll(buildChildren(this));
-		        }
-		        return super.getChildren();
-		      }
-
-		      @Override
-		      public boolean isLeaf() {
-		        if (isFirstTimeLeaf) {
-		          isFirstTimeLeaf = false;
-		          File f = (File) getValue();
-		          isLeaf = f.isFile();
-		        }
-		        return isLeaf;
-		      }
-
-		      private ObservableList<TreeItem<File>> buildChildren(
-		          TreeItem<File> TreeItem) {
-		        File f = TreeItem.getValue();
-		        if (f == null) {
-		          return FXCollections.emptyObservableList();
-		        }
-		        if (f.isFile()) {
-		          return FXCollections.emptyObservableList();
-		        }
-		        File[] files = f.listFiles();
-		        if (files != null) {
-		          ObservableList<TreeItem<File>> children = FXCollections
-		              .observableArrayList();
-		          for (File childFile : files) {
-		            children.add(createNode(childFile));
-		          }
-		          return children;
-		        }
-		        return FXCollections.emptyObservableList();
-		      }
-		    };
-		  }
-	
-	
+ 
+	private static String profileImagePath = "file:default-admin.png";
+	 
 	@FXML
-	private TreeView<File>  fileTree;
-	@FXML
-	private void browse() {
-	    TreeItem<File> root = createNode(new File("/"));
-	    fileTree.setRoot(root);	  
+	private void browse () {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("choose profile image");
+		ExtensionFilter extFilter = new  ExtensionFilter("image files", "*.GIF" , "*.BMP" , "*.JPEG" , "*.PNG" , "*.png" , "*.png" , "*.bmp" , "*.bmp" , "*.jpg" , "*.jpeg");
+		fileChooser.getExtensionFilters().add(extFilter);
+		File img = fileChooser.showOpenDialog(new Stage());
+ 
+			try {
+				setProfileImagePath(img.toURI().toURL().toExternalForm());
+			
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	 
+		userImage.setImage(new Image(getProfileImagePath()));
+	  
+	 
 	}
+	@FXML
+	private ImageView userImage;
 	@FXML
 	private void initialize() {
 		for(Node node : main.getChildren()) {
@@ -271,15 +320,40 @@ public class mainController  extends Main {
 			Anim.fadeIn(node , 1200);
 			Anim.fadeIn(main, 500);
 		}
+	 
+			new File("user").mkdirs();
 		DataBase db = new DataBase("admin" , "admin" , "file.xml");
-		try {
-			if(!db.userExists("admin"))
-				db.createDatabase();
-		} catch (XPathExpressionException | IOException | TransformerException | SAXException
-				| ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		Document doc   ;
+		doc = db.generateDoc();
+		Element user;
+		Element pass ;
+ 
+
+		user admin = new user("admin", "admin", "file:default-admin.png", "user/" + "admin.xml");
+	db = new DataBase(admin.name , admin.password , admin.path);
+	 doc = null ;
+	doc = db.generateDoc();
+	 user = doc.createElement("user");
+	db.getRoot().appendChild(user);
+	user.setAttribute("id", db.getUserName());
+	 pass =  doc.createElement("password");
+	pass.setTextContent(db.getPassWord());
+    user.appendChild(pass);
+    Element image = doc.createElement("image");
+    user.appendChild(pass);
+    user.appendChild(image);
+     
+    image.setAttribute("src",admin.path);
+		db.createDatabase(doc);
+}
+
+	public static String getProfileImagePath() {
+		return profileImagePath;
+	}
+
+	public static void setProfileImagePath(String path) {
+		 profileImagePath = path;
 	}
 
 

@@ -7,6 +7,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -27,6 +28,7 @@ public  class DataBase  extends XmlParser{
 	
 	//setter
 	public void setUserName(String username){
+		
 		this.username = username;
 	}
 	public void setPassWord(String password){
@@ -58,25 +60,22 @@ public  class DataBase  extends XmlParser{
 	private String username;
 	private String password;
 
-	boolean createDatabase() throws FileNotFoundException, IOException, TransformerException, SAXException, XPathExpressionException, ParserConfigurationException  {
-		Document doc;
+	boolean createDatabase(Document doc)   { 
 		File file;
-		doc = generateDoc(getPath() , getRoot() );
-		// set root element
-		// create new elements
-		Element user = doc.createElement("user");
-		getRoot().appendChild(user);
-		user.setAttribute("id", username);
-		Element pass =  doc.createElement("password");
-		pass.setTextContent(password);
-		getRoot().appendChild(user);
-		user.appendChild(pass);
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		Transformer transformer = transformerFactory.newTransformer();
+		Transformer transformer;
+		try {
+			transformer = transformerFactory.newTransformer();
+		 
 		DOMSource source = new DOMSource(doc);
 		file = new File(getPath());
 		StreamResult result = new StreamResult(file);
-		transformer.transform(source, result);
+			transformer.transform(source, result);
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	 
 	 return true;
 	}
 }
